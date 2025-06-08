@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surveyor Form - Survey Form</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+    <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
+    <script src="https://formbuilder.online/assets/js/form-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        var formBuilder = undefined;
+        var currentFormTemplateId = undefined;
+        var formEditorElement = undefined;
+        var formRenderElement = undefined;
+        
+        function init()
+        {
+            console.log("### DocumentForm.init ###");
+
+            formEditorElement = $('#fb-editor');
+            formRenderElement = $('#fb-render');
+
+            setupWindowMessage();
+            setupFormRender();
+        }
+
+        function setupWindowMessage()
+        {
+            window.addEventListener('message', messageEventHandler);
+        }
+
+        function messageEventHandler(event)
+        {
+            console.log('Iframe received message:', event.data);
+
+            const { action, payload } = event.data || {};
+
+            if(action === "submit_request") {
+                submit();
+            }
+        }
+
+        function setupFormRender()
+        {
+            formRenderElement.formRender({
+                formData: getFormTemplateElementDatas()
+            });
+        }
+
+        function getFormTemplateElementDatas()
+        {
+            return JSON.parse(sessionStorage.getItem("form_template_element_data")) || [];
+        }
+
+        function sendMessageToParent(action, payload)
+        {
+            window.parent.postMessage({ action: action, payload: payload }, '*');
+        }
+
+        function getElementValues()
+        {
+            const formData = $('#fb-render :input').serializeArray();
+            return formData;
+        }
+
+        function submit()
+        {
+            console.log("### DocumentForm.submit ###");
+
+            if(! validate()) {
+                return;
+            }
+
+            let elementValues = getElementValues();
+            console.log(elementValues);
+
+            sendMessageToParent("submit_confirm", {
+                elementValues: elementValues
+            });
+        }
+
+        function validate()
+        {
+            console.log("### DocumentForm.validate ###");
+
+            return true;
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div class="container-fluid my-2">
+        <div class="row my-2">
+            <div class="col-md-12">
+                <div id="fb-render"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <button type="button" class="btn btn-primary float-right text" onclick="submit()">
+        <i class="fas fa-save"></i> Submit
+    </button> -->
+</body>
+
+</html>
