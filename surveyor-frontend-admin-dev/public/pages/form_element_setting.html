@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surveyor Admin - Form Element Setting</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+    <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
+    <script src="https://formbuilder.online/assets/js/form-render.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        var formBuilder = undefined;
+        var currentFormTemplateId = undefined;
+        var formEditorElement = undefined;
+        var formRenderElement = undefined;
+
+        function init()
+        {
+            console.log("### FormTemplateElementSetting.init ###");
+
+            formEditorElement = $('#fb-editor');
+            formRenderElement = $('#fb-render');
+
+            setupFormBuilder();
+            setupWindowMessage();
+        }
+
+        function setupFormBuilder()
+        {
+            console.log("### FormTemplateElementSetting.setupFormBuilder ###");
+
+            renderAction = {
+                id: 'render',
+                className: 'btn btn-success',
+                label: 'Render',
+                type: 'button',
+                events: {
+                    click: function () {
+                        render();
+                    }
+                }
+            };
+
+            var options = {
+                actionButtons: [
+                    //renderAction
+                ],
+
+                disableFields: [
+                    'paragraph', 
+                    'hidden', 
+                    'button',
+                    'file',
+                    'header',
+                    'autocomplete'
+                ],
+
+                formData: getFormTemplateElementDatas(),
+
+                onSave: function (event, formData) {
+                    submit(event, formData);
+                }
+            };
+
+            formBuilder = formEditorElement.formBuilder(options);
+        }
+
+        function setupWindowMessage()
+        {
+            window.addEventListener('message', messageEventHandler);
+        }
+
+        function messageEventHandler(event)
+        {
+            console.log('Iframe received message:', event.data);
+
+            const { action, payload } = event.data || {};
+
+            if(action === "initial") {
+                handleInitialAction(action, payload);
+            } else if (action === 'sayHello') {
+                handleSayHelloAction(action, payload)
+            } else if(action === "back-request") {
+                handleBackRequestAction(action, payload);
+            } else if(action === "submit-request") {
+                handleSubmitRequestAction(action, payload);
+            }
+        }
+
+        function handleInitialAction(action, payload)
+        {
+            console.log("### FormTemplateElementSetting.handleInitialAction ###");
+        }
+
+        function handleSayHelloAction(action, payload)
+        {
+            document.getElementById('message').innerText = `Action: ${action}, Payload: ${JSON.stringify(payload)}`;
+            sendMessageToParent("reply", {
+                text: "Hi Vue! Received your hello.",
+                no: 1
+            });
+        }
+
+        function handleBackRequestAction(action, payload) 
+        {
+
+        }
+
+        function handleSubmitRequestAction(action, payload) 
+        {
+
+        }
+
+        function sendMessageToParent(action, payload)
+        {
+            window.parent.postMessage({ action: action, payload: payload }, '*');
+        }
+
+        function getFormTemplateId()
+        {
+            return sessionStorage.getItem("form_template_id");
+        }
+
+        function getFormTemplateElementDatas()
+        {
+            return sessionStorage.getItem("form_template_element_data");
+        }
+
+        function getServerUrl()
+        {
+            // return "http://localhost:9000";
+            return sessionStorage.getItem("server_url");
+        }
+
+        function getAccessToken()
+        {
+            return localStorage.getItem("access_token");
+        }
+
+        function submit(event, formData)
+        {
+            console.log("### FormTemplateElementSetting.submit ###");
+
+            console.log("formBuilder.actions.getData() => ", formBuilder.actions.getData());
+            if(formBuilder.actions.getData().length === 0) {
+                alert("Please select at least 1 element");
+                return;
+            }
+
+            let endpoint = `${getServerUrl()}/api/survey/form-template/setup/element-setting`;
+
+            let requestMessage = {
+                requestPayload: {
+                    formTemplateId: getFormTemplateId(),
+                    elementDatas: formBuilder.actions.getData()
+                }
+            };
+
+            let config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${getAccessToken()}`
+                }
+            };
+
+            axios.post(endpoint, requestMessage, config)
+            .then(function (response) {
+                console.log(response);
+
+                if(response.data.head.status.type === "Success") {
+                    alert("Setting Form Template Elements Success");
+                    sendMessageToParent("submit", {
+                        formTemplateId: getFormTemplateId(),
+                        elementDatas: formBuilder.actions.getData()
+                    });
+                } else {
+                    alert("Error : " + response.data.head.status.message);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                alert("Error : " + error.message);
+            });
+        }
+
+        function render()
+        {
+            console.log("### FormTemplateElementSetting.render ###");
+            const formData = formBuilder.actions.getData();
+            console.log("formData => ", formData);
+            formRenderElement.empty();
+            formRenderElement.formRender({
+                formData: formData
+            });
+            formEditorElement.hide();
+            formRenderElement.show();
+        }
+
+        function edit()
+        {
+            formEditorElement.show();
+            formRenderElement.hide();
+        }
+
+        function getValue()
+        {
+            //const formData = $('#fb-render form').serializeArray();
+            //const formData = new FormData(document.querySelector('#fb-render'));
+            const formData = $('#fb-render :input').serializeArray();
+            console.log(formData);
+        }
+    </script>
+</head>
+
+<body onload="init()">
+    <div class="container-fluid my-2">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="text-center">Form Template Element Setting</h4>
+            </div>
+        </div>
+
+        <p id="message"></p>
+
+        <div class="row my-2">
+            <div class="col-md-12 text-right">
+                <button type="button" class="btn btn-outline-info" onclick="render()">
+                    <i class="fas fa-eye"></i>
+                    Render
+                </button>
+                <button type="button" class="btn btn-outline-warning" onclick="edit()">
+                    <i class="fas fa-edit"></i>
+                    Edit
+                </button>
+                <button type="button" class="btn btn-outline-primary" onclick="submit()">
+                    <i class="fas fa-save"></i>
+                    Save
+                </button>
+                <button type="button" class="btn btn-outline-primary" onclick="getValue()">
+                    <i class="fas fa-save"></i>
+                    Get Value
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-fluid my-2">
+        <div class="row my-2">
+            <div class="col-md-12">
+                <div id="fb-editor"></div>
+                <div id="fb-render"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

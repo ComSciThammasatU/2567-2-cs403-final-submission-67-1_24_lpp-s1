@@ -1,0 +1,16 @@
+ARG CONTAINER_IMAGE=nginx:alpine3.20-slim
+
+
+############################## Deploy Stage ##############################
+FROM ${CONTAINER_IMAGE} AS deploy-stage
+
+ARG SOURCE_DIR=dist
+ARG NGINX_CONF_FILE=docker/build/nginx-server.conf
+
+RUN echo "SOURCE_DIR => ${SOURCE_DIR}"
+RUN echo "NGINX_CONF_FILE => ${NGINX_CONF_FILE}"
+
+RUN rm /etc/nginx/conf.d/default.conf
+COPY ${NGINX_CONF_FILE} /etc/nginx/conf.d/default.conf
+COPY ${SOURCE_DIR} /usr/share/nginx/html/web-console
+############################## Deploy Stage ##############################

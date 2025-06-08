@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+	<link rel="icon" href="/assets/favicon.png" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>TU Surveyor Admin</title>
+
+	<script th:inline="javascript">
+		const data = /*[[${data}]]*/ {};
+		sessionStorage.setItem("data", JSON.stringify(data));
+	</script>
+</head>
+
+<body data-scrollbar-theme="os-theme-dark">
+	<div id="app"></div>
+	<script th:inline="javascript" type="module" src="/src/main.ts"></script>
+</body>
+
+</html>

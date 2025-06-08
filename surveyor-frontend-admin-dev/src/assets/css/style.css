@@ -1,0 +1,126 @@
+*, body {
+    font-family: 'Mitr', sans-serif;
+}
+
+.ezwork-no-radius {
+    border-radius: 0px !important;
+}
+
+.ezwork-app-menu-wrapper {
+    cursor: pointer !important;
+}
+
+.ezwork-card-border-top-dark {
+    border-top-color: #343a40 !important;
+}
+
+.ezwork-table-action-icon {
+    font-size: 1.3em;
+}
+
+
+/****************************** Start: btn-circle ******************************/
+.btn-circle.btn-sm {
+    width: 30px;
+    height: 30px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    font-size: 8px;
+    text-align: center;
+}
+.btn-circle.btn-md {
+    width: 50px;
+    height: 50px;
+    padding: 7px 10px;
+    border-radius: 25px;
+    font-size: 10px;
+    text-align: center;
+}
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 12px;
+    text-align: center;
+}
+/****************************** End: btn-circle ******************************/
+
+
+/****************************** Start: page-loader ******************************/
+.ezwork-loader {
+    
+    text-align: center;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255,255,255 , 0.9);
+    z-index: 9999;
+}
+
+.ezwork-loader-spin {
+    border-radius: 100%;
+    display: inline-block;
+    height: 30px;
+    width: 30px;
+    top: 50%;
+    position: absolute;
+    -webkit-animation: ezwork-loader infinite 2s;
+    -moz-animation: ezwork-loader infinite 2s;
+    animation: ezwork-loader infinite 2s;
+    box-shadow: 25px 25px #3498db, -25px 25px #c0392b, -25px -25px #f1c40f, 25px -25px #27ae60;
+    background-size: contain;
+    
+}
+
+@-webkit-keyframes ezwork-loader {
+    0%,
+    100% {
+        box-shadow: 25px 25px #3498db, -25px 25px #c0392b, -25px -25px #f1c40f, 25px -25px #27ae60;
+    }
+    25% {
+        box-shadow: -25px 25px #3498db, -25px -25px #c0392b, 25px -25px #f1c40f, 25px 25px #27ae60;
+    }
+    50% {
+        box-shadow: -25px -25px #3498db, 25px -25px #c0392b, 25px 25px #f1c40f, -25px 25px #27ae60;
+    }
+    75% {
+        box-shadow: 25px -25px #3498db, 25px 25px #c0392b, -25px 25px #f1c40f, -25px -25px #27ae60;
+    }
+}
+
+@-moz-keyframes ezwork-loader {
+    0%,
+    100% {
+        box-shadow: 25px 25px #3498db, -25px 25px #c0392b, -25px -25px #f1c40f, 25px -25px #27ae60;
+    }
+    25% {
+        box-shadow: -25px 25px #3498db, -25px -25px #c0392b, 25px -25px #f1c40f, 25px 25px #27ae60;
+    }
+    50% {
+        box-shadow: -25px -25px #3498db, 25px -25px #c0392b, 25px 25px #f1c40f, -25px 25px #27ae60;
+    }
+    75% {
+        box-shadow: 25px -25px #3498db, 25px 25px #c0392b, -25px 25px #f1c40f, -25px -25px #27ae60;
+    }
+}
+
+@keyframes ezwork-loader {
+    0%,
+    100% {
+        box-shadow: 25px 25px #3498db, -25px 25px #c0392b, -25px -25px #f1c40f, 25px -25px #27ae60;
+    }
+    25% {
+        box-shadow: -25px 25px #3498db, -25px -25px #c0392b, 25px -25px #f1c40f, 25px 25px #27ae60;
+    }
+    50% {
+        box-shadow: -25px -25px #3498db, 25px -25px #c0392b, 25px 25px #f1c40f, -25px 25px #27ae60;
+    }
+    75% {
+        box-shadow: 25px -25px #3498db, 25px 25px #c0392b, -25px 25px #f1c40f, -25px -25px #27ae60;
+    }
+}
+/****************************** End: page-loader ******************************/
