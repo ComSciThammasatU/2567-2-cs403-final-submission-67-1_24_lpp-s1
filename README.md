@@ -52,7 +52,7 @@ cloudflared tunnel --url http:localhost:9000
 **Visual Studio Code**
 1. Open terminal in surveyor-frontend-admin folder.
 ```
-git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+git clone https://github.com/ComSciThammasatU/2567-2-cs403-final-submission-67-1_24_lpp-s1.git
 ```
 2. Copy public URL form terminal (by running  cloudflared tunnel  --url http:localhost:9000 command.). then, paste it on env file (named .env.develop_dev) for config in VITE_SERVER_ENDPOINT line and also config liff id of TU Surveyor Register on VITE_LIFF_ID line.
 ```
@@ -65,7 +65,7 @@ cloudflared tunnel --url http:localhost:3013
 4. Copy public URL and paste it on Callback URL in LINE Login and other two LIFF on Endpoint URL.
 5. Open terminal in surveyor-frontend-form folder.
 ```
-git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+git clone https://github.com/ComSciThammasatU/2567-2-cs403-final-submission-67-1_24_lpp-s1.git
 ```
 6. Copy public URL form terminal (by running  cloudflared tunnel  --url http:localhost:9000 command.). then, paste it on env file (named .env.develop_dev) for config in VITE_SERVER_ENDPOINT line.
 ```
